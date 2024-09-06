@@ -4,8 +4,6 @@ metadata:
   labels:
     app: docker-swarm-visualizer
   name: docker-swarm-visualizer
-  annotations:
-    applicationTags: "argocd-v8"
 spec:
   selector:
     matchLabels:
