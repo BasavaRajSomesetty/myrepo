@@ -34,7 +34,7 @@ spec:
         - configMapRef:
             name: ssd-proxy-certs
             optional: true
-        image: opsmx11/supplychain-preprocessor:83871ce-171
+        image: opsmx11/supplychain-preprocessor:83871ce-172
         imagePullPolicy: IfNotPresent
         name: supplychain-preprocessor
         readinessProbe:
