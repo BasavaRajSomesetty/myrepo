@@ -39,7 +39,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        image: opsmx11/token-machine:99eb752-4
+        image: opsmx11/token-machine:99eb752-5
         imagePullPolicy: IfNotPresent
         name: token-machine
         ports:
