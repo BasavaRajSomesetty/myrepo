@@ -34,7 +34,7 @@ spec:
         - configMapRef:
             name: ssd-proxy-certs
             optional: true
-        image: aswathyashok/supplychain-preprocessor:v1.20
+        image: docker.io/aswathyashok/supplychain-preprocessor:v1.19
         imagePullPolicy: IfNotPresent
         name: supplychain-preprocessor
         readinessProbe:
