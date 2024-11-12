@@ -1,0 +1,10 @@
+[
+    {
+      "sourcePath": "app/carina-manager",
+      "binaryPath": "${WORKSPACE}/ssd-tmp/bin/carina-manager"
+    },
+    {
+       "sourcePath": "app/carina-instance",
+       "binaryPath": "${WORKSPACE}/ssd-tmp/bin/carina-instance"
+    }
+]
