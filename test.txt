@@ -1,28 +1,28 @@
-#!/bin/bash 
-set -e
+echo ":rocket: Restarting all Deployments and DaemonSets in all namespaces..."
+export KUBECONFIG=/home/opsmx/k3s.yaml
 
-# This can be Release tag (recommended) or a branch name
-RELEASETAG=2025-05
+# Step 1: Restart Deployments and DaemonSets
+for ns in $(kubectl get ns --no-headers -o custom-columns=":metadata.name"); do
+  echo ":arrows_counterclockwise: Restarting Deployments in namespace: $ns"
+  kubectl rollout restart deployment -n "$ns"
 
-curl -fSL -o bundle.sh https://raw.githubusercontent.com/OpsMx/enterprise-ssd/$RELEASETAG/vm-install/image-setup/bundle.sh
+  echo ":arrows_counterclockwise: Restarting DaemonSets in namespace: $ns"
+  kubectl rollout restart daemonset -n "$ns"
+done
 
-curl -fSL -o version.env https://raw.githubusercontent.com/OpsMx/enterprise-ssd/$RELEASETAG/vm-install/image-setup/version.env
+# Step 2: Wait until all pods show READY 1/1 (or n/n for multi-container pods)
+echo ":hourglass_flowing_sand: Verifying container readiness (e.g., 1/1 or 2/2)..."
 
-# Make the downloaded script as executable
-chmod +x bundle.sh
+while true; do
+  not_ready_count=$(kubectl get pods --all-namespaces --no-headers | awk '{print $2}' | grep -vE '^([0-9]+)/\1$' | wc -l)
 
-# (when not dealing with version tags) Update release tag in version.env with what value is in enviornment variable
-sed -i "s/^RELEASETAG=.*/RELEASETAG=${RELEASETAG}/" version.env
+  if [ "$not_ready_count" -eq 0 ]; then
+    echo ":white_check_mark: All containers in all pods are ready."
+    break
+  else
+    echo ":hourglass_flowing_sand: Pods with unready containers: $not_ready_count"
+    sleep 5
+  fi
+done
 
-# Run the bundle.sh
-./bundle.sh
-
-# Check if all images are pulled
-sudo docker images
-
-# Clean the script files used for bundling
-./clean-before-build.sh
-
-# Clean cloud-init and shutdown the instance
-#sudo cloud-init clean
-#sudo shutdown -h now
+echo ":tada: Cluster-wide restart complete and all pods are fully ready!"
