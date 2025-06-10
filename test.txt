@@ -14,7 +14,7 @@ done
 echo ":hourglass_flowing_sand: Verifying container readiness (e.g., 1/1 or 2/2)..."
 
 while true; do
-  not_ready_count=$(kubectl get pods --all-namespaces --no-headers | awk '{print $2}' | grep -vE '^([0-9]+)/\1$' | wc -l)
+  not_ready_count=$(kubectl get pods --all-namespaces --no-headers | awk '{print $3}' | grep -vE '^([0-9]+)/\1$' | wc -l)
 
   if [ "$not_ready_count" -eq 0 ]; then
     echo ":white_check_mark: All containers in all pods are ready."
